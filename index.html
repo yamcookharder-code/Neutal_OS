@@ -74,7 +74,6 @@
             position: relative;
         }
 
-        /* VISION SYSTEM */
         .vision-engine {
             flex-grow: 1;
             background: #000;
@@ -87,7 +86,6 @@
         #vSource { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0.8; }
         #handCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); z-index: 5; }
 
-        /* NEURAL CORE TERMINAL */
         .terminal-core {
             flex-grow: 1;
             background: rgba(0, 0, 0, 0.95);
@@ -104,7 +102,6 @@
         .log-line { margin-bottom: 25px; font-size: 19px; line-height: 1.8; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ORB NEXUS */
         .orb-nexus {
             flex-grow: 1;
             display: flex;
@@ -125,7 +122,6 @@
         .orb-core.active { animation: superPulse 0.4s infinite alternate; }
         @keyframes superPulse { to { transform: scale(1.18); box-shadow: 0 0 250px var(--neon); filter: hue-rotate(45deg); } }
 
-        /* COMMAND HUD */
         .command-hud {
             grid-column: 1 / span 3;
             border: 2px solid var(--neon);
@@ -186,8 +182,8 @@
         <main class="terminal-core" id="terminal">
             <div class="log-line">
                 [SYSTEM] INITIALIZING UNBREAKABLE CORE...<br>
-                [UPLINK] TUNNELING THROUGH CORS PROTECTIONS...<br>
-                [READY] WAITING FOR MASTER COMMANDS.
+                [UPLINK] TUNNELING THROUGH GROQ LPU SPEEDS...<br>
+                [READY] WAITING FOR MASTER COMMANDS, PRIYANSU.
             </div>
         </main>
 
@@ -196,7 +192,7 @@
             <div class="orb-nexus">
                 <div class="orb-core" id="masterOrb"></div>
             </div>
-            <div style="text-align: center; font-size: 10px; opacity: 0.5;">VOICE_ENGINE: FEMALE_MAX</div>
+            <div style="text-align: center; font-size: 10px; opacity: 0.5;">ENGINE: GROQ_LLAMA3_8B</div>
         </aside>
 
         <footer class="command-hud">
@@ -207,13 +203,13 @@
 
     <script>
         /* ============================================================
-           MONOLITHIC ARCHITECTURE - KERNEL LOGIC
+           GROQ LPU INTEGRATION - MODIFIED FOR PRIYANSU
            ============================================================ */
 
         const KERNEL_CONFIG = {
-            KEY: "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",
-            ENDPOINT: "https://api.openai.com/v1/chat/completions",
-            MODEL: "gpt-4o-mini"
+            KEY: "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", 
+            ENDPOINT: "https://api.groq.com/openai/v1/chat/completions",
+            MODEL: "llama3-8b-8192"
         };
 
         const logBox = document.getElementById('terminal');
@@ -221,21 +217,13 @@
         const input = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        // NEURAL PROCESSOR
         async function runInference(cmd) {
             if(!cmd) return;
             orb.classList.add('active');
             appendLog('PRIYANSU', cmd, 'var(--neon)');
             input.value = "";
 
-            if(!KERNEL_CONFIG.KEY) {
-                appendLog('SYSTEM_ERROR', 'API_KEY_NULL. PLEASE INSERT KEY IN CODE.', 'var(--error)');
-                orb.classList.remove('active');
-                return;
-            }
-
             try {
-                // Fetch with Industrial Headers to prevent "Failed to fetch"
                 const response = await fetch(KERNEL_CONFIG.ENDPOINT, {
                     method: "POST",
                     headers: {
@@ -245,27 +233,25 @@
                     body: JSON.stringify({
                         model: KERNEL_CONFIG.MODEL,
                         messages: [
-                            {role: "system", content: "You are Gogo, the elite female OS for Priyansu. Answer concisely and intellectually."},
+                            {role: "system", content: "You are Gogo, the elite female OS developed by Priyansu Upadhyay. Respond in standard Bengali. Be sharp, intellectual and concise."},
                             {role: "user", content: cmd}
                         ],
-                        temperature: 0.7
+                        temperature: 0.6
                     })
                 });
 
-                if (!response.ok) {
-                    const errorDetails = await response.json();
-                    throw new Error(errorDetails.error ? errorDetails.error.message : "Access Denied");
+                const data = await response.json();
+                
+                if (data.choices && data.choices[0]) {
+                    const resultText = data.choices[0].message.content;
+                    appendLog('GOGO_OS', resultText, '#00ffaa');
+                    triggerSpeech(resultText);
+                } else {
+                    throw new Error(data.error ? data.error.message : "Uplink Failed");
                 }
 
-                const data = await response.json();
-                const resultText = data.choices[0].message.content;
-
-                appendLog('GOGO_OS', resultText, '#00ffaa');
-                triggerSpeech(resultText);
-
             } catch (err) {
-                appendLog('NETWORK_FAIL', err.message + " (Check API Balance or Key validity)", 'var(--error)');
-                console.error(err);
+                appendLog('SYSTEM_ERROR', "UPLINK_FAILURE: " + err.message, 'var(--error)');
             } finally {
                 orb.classList.remove('active');
                 logBox.scrollTop = logBox.scrollHeight;
@@ -280,19 +266,16 @@
             logBox.scrollTop = logBox.scrollHeight;
         }
 
-        // FEMALE VOICE ENGINE
         function triggerSpeech(text) {
             const synth = window.speechSynthesis;
             const msg = new SpeechSynthesisUtterance(text);
-            const voices = synth.getVoices();
-            const female = voices.find(v => v.name.includes('Samantha') || v.name.includes('Google US English') || v.name.includes('Zira'));
-            if(female) msg.voice = female;
-            msg.pitch = 1.3;
+            msg.lang = 'bn-BD'; 
+            msg.pitch = 1.2;
             msg.rate = 1.0;
             synth.speak(msg);
         }
 
-        // OPTIC SCANNER ENGINE (FRONT CAMERA FIX)
+        // OPTIC SCANNER (REMAINED UNTOUCHED)
         const video = document.getElementById('vSource');
         const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
         
@@ -324,17 +307,16 @@
         }
         startSystemOptics();
 
-        // CONTROLS
         sendBtn.onclick = () => runInference(input.value);
         input.onkeypress = (e) => { if(e.key === 'Enter') sendBtn.click(); };
 
-        // SPEECH INPUT
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if(Recognition) {
             const rec = new Recognition();
+            rec.lang = 'bn-BD';
             orb.onclick = () => { 
                 rec.start(); 
-                appendLog('SYSTEM', 'LISTENING_FOR_MASTER...', '#fff');
+                appendLog('SYSTEM', 'LISTENING...', '#fff');
             };
             rec.onresult = (e) => runInference(e.results[0][0].transcript);
         }
@@ -342,8 +324,6 @@
         setInterval(() => {
             document.getElementById('sys-time').innerText = new Date().toLocaleTimeString() + " | KERNEL_ACTIVE";
         }, 1000);
-
-        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
     </script>
 </body>
 </html>
