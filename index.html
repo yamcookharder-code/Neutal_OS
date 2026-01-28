@@ -3,230 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOGO NEURAL OS | ARCHITECT EDITION</title>
-    
+    <title>GOGO NEURAL OS | FINAL STABLE</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@200;500;800&display=swap');
-        
-        :root { --neon: #00f2ff; --bg: #000205; --panel: rgba(0, 242, 255, 0.05); --err: #ff0055; }
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@400;800&display=swap');
+        :root { --neon: #00f2ff; --bg: #000408; --err: #ff0044; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body { 
-            background: var(--bg); color: #fff; font-family: 'JetBrains Mono', monospace; 
-            height: 100vh; overflow: hidden; display: flex; flex-direction: column;
-        }
-
-        /* MASSIVE 3-SECTOR GRID */
-        .os-container {
-            display: grid;
-            grid-template-columns: 400px 1fr 350px;
-            grid-template-rows: 80px 1fr 100px;
-            gap: 20px; height: 100vh; padding: 20px;
-        }
-
-        /* HEADER MODULE */
-        header {
-            grid-column: 1 / span 3;
-            border: 2px solid var(--neon); border-radius: 20px;
-            background: var(--panel); display: flex; align-items: center; justify-content: space-between;
-            padding: 0 40px; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
-        }
-        .logo { font-family: 'Syncopate'; font-size: 24px; letter-spacing: 15px; color: var(--neon); }
-
-        /* SECTOR 1: VISION DIAGNOSTICS (LEFT) */
-        .vision-sector {
-            grid-row: 2; display: flex; flex-direction: column; gap: 20px;
-        }
-        .module {
-            border: 1px solid var(--neon); border-radius: 25px; padding: 25px;
-            background: var(--panel); backdrop-filter: blur(10px);
-        }
-        .cam-feed {
-            width: 100%; height: 280px; background: #000; border-radius: 15px;
-            border: 1px solid var(--neon); overflow: hidden; position: relative;
-        }
-        #handCanvas { width: 100%; height: 100%; transform: scaleX(-1); }
-
-        /* SECTOR 2: NEURAL CORE TERMINAL (CENTER) */
-        .terminal-sector {
-            grid-row: 2; background: rgba(0,0,0,0.95);
-            border: 3px solid var(--neon); border-radius: 40px;
-            padding: 40px; display: flex; flex-direction: column;
-            box-shadow: inset 0 0 60px rgba(0, 242, 255, 0.1);
-        }
-        .output-stream {
-            flex-grow: 1; overflow-y: auto; font-size: 18px; line-height: 1.8;
-            color: #ccfaff; text-shadow: 0 0 5px rgba(0, 242, 255, 0.3);
-        }
-
-        /* SECTOR 3: QUANTUM ORB (RIGHT) */
-        .status-sector {
-            grid-row: 2; display: flex; flex-direction: column; gap: 20px;
-        }
-        .orb-nexus {
-            height: 350px; display: flex; align-items: center; justify-content: center;
-        }
-        .neural-orb {
-            width: 160px; height: 160px; border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #fff, var(--neon), #7000ff);
-            box-shadow: 0 0 60px var(--neon); cursor: pointer;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .neural-orb.active { animation: corePulse 0.4s infinite alternate; }
-        @keyframes corePulse { to { transform: scale(1.25); box-shadow: 0 0 120px var(--neon); } }
-
-        /* INPUT HUB (BOTTOM) */
-        footer {
-            grid-column: 1 / span 3;
-            background: var(--panel); border: 2px solid var(--neon);
-            border-radius: 60px; display: flex; padding: 0 40px; align-items: center;
-        }
-        input {
-            flex: 1; background: transparent; border: none; color: #fff;
-            font-size: 20px; font-family: inherit; outline: none;
-        }
-        .btn-exe {
-            background: var(--neon); color: #000; border: none;
-            width: 60px; height: 60px; border-radius: 50%; font-weight: 900;
-            font-size: 24px; cursor: pointer; box-shadow: 0 0 20px var(--neon);
-        }
-
+        body { background: var(--bg); color: #fff; font-family: 'JetBrains Mono', monospace; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        .grid { display: grid; grid-template-columns: 350px 1fr 320px; height: 100vh; gap: 15px; padding: 15px; }
+        .panel { border: 2px solid var(--neon); border-radius: 20px; padding: 20px; background: rgba(0, 242, 255, 0.05); overflow: hidden; }
+        .terminal { background: #000; border: 2px solid var(--neon); border-radius: 25px; padding: 25px; height: 100%; overflow-y: auto; box-shadow: inset 0 0 30px rgba(0, 242, 255, 0.2); }
+        .orb { width: 140px; height: 140px; background: radial-gradient(circle, #fff, var(--neon), #000); border-radius: 50%; box-shadow: 0 0 50px var(--neon); cursor: pointer; margin: auto; }
+        .orb.active { animation: pulse 0.5s infinite alternate; }
+        @keyframes pulse { to { transform: scale(1.1); box-shadow: 0 0 90px var(--neon); } }
+        footer { grid-column: 1 / span 3; border: 2px solid var(--neon); border-radius: 50px; display: flex; padding: 10px 30px; align-items: center; margin-top: -80px; z-index: 100; background: #000; }
+        input { flex: 1; background: transparent; border: none; color: #fff; font-size: 18px; outline: none; }
+        .btn { background: var(--neon); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
         video { display: none; }
     </style>
 </head>
 <body>
-
     <video id="vSource" playsinline></video>
-
-    <div class="os-container">
-        <header>
-            <div class="logo">GOGO NEURAL OS</div>
-            <div style="font-size: 10px; opacity: 0.7; letter-spacing: 3px;">UID: PRIYANSU_ARCHITECT | KERNEL: 5.8.2</div>
-        </header>
-
-        <aside class="vision-sector">
-            <div class="module">
-                <div style="font-size: 10px; margin-bottom: 15px; color: var(--neon);">NEURAL_VISION_LENS</div>
-                <div class="cam-feed"><canvas id="handCanvas"></canvas></div>
-            </div>
-            <div class="module" id="diagLogs" style="font-size: 10px; line-height: 2; color: var(--neon);">
-                > GESTURE_BOOT: OK<br>
-                > MODEL_SYNC: PENDING...<br>
-                > ENCRYPTION: AES_256_ACTIVE
-            </div>
-        </aside>
-
-        <main class="terminal-sector">
-            <div class="output-stream" id="terminal">
-                [SYSTEM REPORT]
-                GOGO NEURAL INTERFACE INITIALIZED.
-                AWAITING UPLINK COMMAND FROM MASTER_PRIYANSU...
-            </div>
-        </main>
-
-        <aside class="status-sector">
-            <div class="module orb-nexus">
-                <div class="neural-orb" id="orb"></div>
-            </div>
-            <div class="module">
-                <div style="font-size: 10px; margin-bottom: 10px;">CORE_STATUS</div>
-                <div id="coreStats" style="font-size: 11px;">
-                    UPLINK: SECURE<br>
-                    LATENCY: 14ms<br>
-                    MODEL: GEMINI_1.5_PRO
-                </div>
-            </div>
-        </aside>
-
+    <div class="grid">
+        <aside class="panel"><canvas id="handCanvas" style="width:100%; height:250px; background:#000; border-radius:10px; transform:scaleX(-1);"></canvas></aside>
+        <main class="panel" style="padding:0; border:none;"><div class="terminal" id="term">READY FOR INPUT...</div></main>
+        <aside class="panel" style="display:flex;"><div class="orb" id="orb"></div></aside>
         <footer>
-            <input type="text" id="userInput" placeholder="EXECUTE NEURAL COMMAND..." autocomplete="off">
-            <button class="btn-exe" id="sendBtn">➔</button>
+            <input type="text" id="userInput" placeholder="COMMAND MASTER..." autocomplete="off">
+            <button class="btn" id="sendBtn">➔</button>
         </footer>
     </div>
-
     <script>
-        // API KEY and ENDPOINT FIX
-        const API_KEY = "AIzaSyC5d-8sMwErf6LZiZA_A_gV9DRYKYbmrV0";
-        const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+        const KEY = "AIzaSyC5d-8sMwErf6LZiZA_A_gV9DRYKYbmrV0"; //
+        const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`;
 
-        const orb = document.getElementById('orb');
-        const terminal = document.getElementById('terminal');
-        const input = document.getElementById('userInput');
-
-        async function executeCommand(cmd) {
+        async function send(cmd) {
             if(!cmd) return;
+            const term = document.getElementById('term');
+            const orb = document.getElementById('orb');
             orb.classList.add('active');
-            terminal.innerHTML += `<div style="color:var(--neon); margin-top:20px;">> USER: ${cmd}</div>`;
-            terminal.scrollTop = terminal.scrollHeight;
-
+            term.innerHTML += `<div style="color:var(--neon); margin-top:10px;">> MASTER: ${cmd}</div>`;
+            
             try {
-                const response = await fetch(ENDPOINT, {
+                const r = await fetch(URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: "You are Gogo, an elite Neural OS. User: Priyansu. Instruction: Respond like a high-end machine: " + cmd }] }]
-                    })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: cmd }] }] })
                 });
-
-                const data = await response.json();
-                
-                if(data.error) {
-                    terminal.innerHTML += `<div style="color:var(--err); margin-top:10px;">[CORE_ERROR]: ${data.error.message}</div>`;
-                } else {
-                    const result = data.candidates[0].content.parts[0].text;
-                    terminal.innerHTML += `<div style="color:#fff; margin-top:10px;">> GOGO: ${result}</div>`;
-                    
-                    // Voice Engine
-                    const msg = new SpeechSynthesisUtterance(result);
-                    window.speechSynthesis.speak(msg);
-                }
-            } catch (err) {
-                terminal.innerHTML += `<div style="color:var(--err); margin-top:10px;">[SYNC_FAILED]: CHECK HTTPS CONNECTION.</div>`;
-            } finally {
-                orb.classList.remove('active');
-                terminal.scrollTop = terminal.scrollHeight;
-            }
+                const d = await r.json();
+                if(d.error) throw new Error(d.error.message);
+                const txt = d.candidates[0].content.parts[0].text;
+                term.innerHTML += `<div style="margin-top:10px;">> GOGO: ${txt}</div>`;
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance(txt));
+            } catch (e) {
+                term.innerHTML += `<div style="color:var(--err); margin-top:10px;">[FAIL]: ${e.message}</div>`;
+            } finally { orb.classList.remove('active'); term.scrollTop = term.scrollHeight; }
         }
 
-        // Professional Hand Tracking
+        document.getElementById('sendBtn').onclick = () => { send(document.getElementById('userInput').value); document.getElementById('userInput').value = ""; };
+        
+        // Mediapipe Init
         const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
         hands.setOptions({ maxNumHands: 1, minDetectionConfidence: 0.8 });
-        
         hands.onResults((res) => {
-            const canvas = document.getElementById('handCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const ctx = document.getElementById('handCanvas').getContext('2d');
+            ctx.clearRect(0, 0, 640, 480);
             if (res.multiHandLandmarks) {
                 for (const lm of res.multiHandLandmarks) {
                     drawConnectors(ctx, lm, HAND_CONNECTIONS, {color: '#00f2ff', lineWidth: 2});
-                    drawLandmarks(ctx, lm, {color: '#fff', radius: 1});
-                    // Gesture Detect: Raise Index finger
-                    if(lm[8].y < lm[6].y) orb.style.boxShadow = "0 0 100px var(--neon)";
                 }
             }
         });
-
-        const cam = new Camera(document.getElementById('vSource'), {
-            onFrame: async () => { await hands.send({image: document.getElementById('vSource')}); },
-            width: 1280, height: 720
-        });
-        cam.start();
-
-        // Control Logic
-        document.getElementById('sendBtn').onclick = () => { executeCommand(input.value); input.value = ""; };
-        input.onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('sendBtn').click(); };
-
-        // Voice Module
-        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(Speech) {
-            const rec = new Speech();
-            orb.onclick = () => { rec.start(); terminal.innerHTML += `<div style="color:yellow;">[LISTENING...]</div>`; };
-            rec.onresult = (e) => executeCommand(e.results[0][0].transcript);
-        }
+        new Camera(document.getElementById('vSource'), { onFrame: async () => { await hands.send({image: document.getElementById('vSource')}); } }).start();
     </script>
 </body>
 </html>
+
