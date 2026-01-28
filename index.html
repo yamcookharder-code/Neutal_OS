@@ -3,385 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOGO NEURAL OS | INDUSTRIAL MONOLITH V10.4</title>
+    <title>GOGO NEURAL OS | PRIYANSU MASTERPIECE V12.0</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 
     <style>
-        /* =========================================
-        [CORE SYSTEM STYLES] 
-        =========================================
-        */
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@200;500;800&display=swap');
+        /* ============================================================
+           INDUSTRIAL NEURAL INTERFACE DESIGN SYSTEM
+           ============================================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@200;400;800&display=swap');
         
         :root {
-            --neon-primary: #00f2ff;
-            --neon-secondary: #7000ff;
-            --system-bg: #000205;
-            --panel-alpha: rgba(0, 242, 255, 0.05);
-            --error-red: #ff0055;
-            --success-green: #00ffaa;
-            --terminal-text: #ccfaff;
+            --neon-cyan: #00f2ff;
+            --deep-space: #000205;
+            --panel-glass: rgba(0, 242, 255, 0.03);
+            --interface-border: 2px solid #00f2ff;
+            --critical-red: #ff003c;
+            --matrix-green: #00ffaa;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
 
         body {
-            background-color: var(--system-bg);
-            background-image: radial-gradient(circle at center, #00151a 0%, #000 100%);
+            background-color: var(--deep-space);
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
             color: #fff;
             font-family: 'JetBrains Mono', monospace;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* MASTER GRID SYSTEM */
-        .neural-monolith-grid {
+        /* MASTER LAYOUT ENGINE */
+        .os-container {
             display: grid;
-            grid-template-columns: 420px 1fr 380px;
-            grid-template-rows: 90px 1fr 130px;
+            grid-template-columns: 450px 1fr 400px;
+            grid-template-rows: 100px 1fr 140px;
             height: 100vh;
             width: 100vw;
-            gap: 25px;
-            padding: 25px;
+            gap: 30px;
+            padding: 30px;
         }
 
-        /* TOP CORE INTERFACE */
-        .system-header {
+        /* TOP NAV HUD */
+        .hud-top {
             grid-column: 1 / span 3;
-            border: 2px solid var(--neon-primary);
-            border-radius: 20px;
-            background: var(--panel-alpha);
+            border: var(--interface-border);
+            border-radius: 25px;
+            background: var(--panel-glass);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 40px;
-            box-shadow: 0 0 40px rgba(0, 242, 255, 0.15);
-            backdrop-filter: blur(10px);
+            padding: 0 60px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.1);
         }
 
-        .os-logo {
+        .os-brand {
             font-family: 'Syncopate';
-            font-size: 28px;
-            letter-spacing: 15px;
-            color: var(--neon-primary);
-            text-shadow: 0 0 15px var(--neon-primary);
+            font-size: 32px;
+            letter-spacing: 20px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px var(--neon-cyan);
         }
 
-        /* SYSTEM SECTORS */
-        .os-sector {
-            border: 2px solid var(--neon-primary);
-            border-radius: 35px;
-            background: var(--panel-alpha);
-            padding: 30px;
+        /* SECTORS */
+        .panel-sector {
+            border: var(--interface-border);
+            border-radius: 40px;
+            background: var(--panel-glass);
+            padding: 35px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
             position: relative;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease;
         }
 
-        .os-sector:hover { box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); transform: translateY(-5px); }
+        .panel-sector:hover { transform: scale(1.01); background: rgba(0, 242, 255, 0.07); }
 
-        /* SECTOR 1: OPTIC ENGINE (LEFT) */
-        .vision-core-wrap {
+        /* VISION LENS (LEFT) */
+        .optic-feed-wrap {
             flex-grow: 1;
             background: #000;
-            border: 1px solid var(--neon-primary);
-            border-radius: 20px;
+            border-radius: 25px;
+            border: 1px solid var(--neon-cyan);
             overflow: hidden;
             position: relative;
         }
 
-        #vSource { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0.6; }
+        #vSource { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0.7; }
         #handCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); z-index: 10; }
 
-        /* SECTOR 2: NEURAL CORE TERMINAL (CENTER) */
-        .terminal-core {
+        /* NEURAL TERMINAL (CENTER) */
+        .neural-terminal {
             flex-grow: 1;
-            background: rgba(0, 0, 0, 0.95);
-            border: 4px solid var(--neon-primary);
-            border-radius: 45px;
-            padding: 45px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 4px solid var(--neon-cyan);
+            border-radius: 50px;
+            padding: 50px;
             overflow-y: auto;
-            position: relative;
-            box-shadow: inset 0 0 80px rgba(0, 242, 255, 0.1);
+            font-size: 20px;
+            line-height: 1.8;
+            box-shadow: inset 0 0 100px rgba(0, 242, 255, 0.1);
         }
 
-        .terminal-core::-webkit-scrollbar { width: 5px; }
-        .terminal-core::-webkit-scrollbar-thumb { background: var(--neon-primary); border-radius: 10px; }
+        .neural-terminal::-webkit-scrollbar { width: 6px; }
+        .neural-terminal::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
 
-        .log-entry { margin-bottom: 20px; font-size: 18px; line-height: 1.8; color: var(--terminal-text); }
-        .user-tag { color: var(--neon-primary); font-weight: 800; margin-right: 10px; }
-        .ai-tag { color: var(--success-green); font-weight: 800; margin-right: 10px; }
+        .entry { margin-bottom: 25px; }
+        .tag-priyansu { color: var(--neon-cyan); font-weight: 800; }
+        .tag-gogo { color: var(--matrix-green); font-weight: 800; }
 
-        /* SECTOR 3: QUANTUM CORE (RIGHT) */
-        .orb-field {
+        /* QUANTUM ORB (RIGHT) */
+        .orb-nexus {
             flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
-        .neural-orb {
-            width: 220px;
-            height: 220px;
+        .core-vortex {
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #fff, var(--neon-primary), var(--neon-secondary));
-            box-shadow: 0 0 100px var(--neon-primary);
+            background: radial-gradient(circle at 35% 35%, #fff, var(--neon-cyan), #6a00ff);
+            box-shadow: 0 0 100px var(--neon-cyan);
             cursor: pointer;
-            transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .neural-orb.processing { animation: hyperPulse 0.4s infinite alternate; }
-        @keyframes hyperPulse { to { transform: scale(1.2); box-shadow: 0 0 180px var(--neon-primary); filter: hue-rotate(90deg); } }
+        .core-vortex.processing { animation: hyperPulse 0.4s infinite alternate; }
+        @keyframes hyperPulse { to { transform: scale(1.2); box-shadow: 0 0 250px var(--neon-cyan); filter: hue-rotate(45deg); } }
 
-        /* FOOTER COMMAND HUD */
-        .command-hud {
+        /* BOTTOM INPUT HUD */
+        .input-hud {
             grid-column: 1 / span 3;
-            border: 2px solid var(--neon-primary);
-            border-radius: 70px;
+            border: var(--interface-border);
+            border-radius: 100px;
             display: flex;
             padding: 0 60px;
             align-items: center;
-            background: var(--panel-alpha);
-            backdrop-filter: blur(15px);
+            background: var(--panel-glass);
             gap: 30px;
+            backdrop-filter: blur(10px);
         }
 
-        .neural-input {
+        .os-input {
             flex: 1;
             background: transparent;
             border: none;
             color: #fff;
-            font-size: 24px;
-            font-family: inherit;
+            font-size: 26px;
+            font-family: 'JetBrains Mono';
             outline: none;
         }
 
-        .execute-trigger {
-            background: var(--neon-primary);
+        .os-btn {
+            background: var(--neon-cyan);
             border: none;
-            width: 75px;
-            height: 75px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 30px var(--neon-primary);
-            font-size: 35px;
-            font-weight: 900;
+            font-size: 40px;
+            box-shadow: 0 0 30px var(--neon-cyan);
+            transition: 0.3s;
         }
+
+        .os-btn:active { transform: scale(0.9); }
 
         video { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="neural-monolith-grid">
-        <header class="system-header">
-            <div class="os-logo">GOGO_NEURAL_OS_v10.4</div>
-            <div id="system-time" style="font-size: 12px; letter-spacing: 5px;">2026_MASTER_ARCHIVE</div>
+    <div class="os-container">
+        <header class="hud-top">
+            <div class="os-brand">GOGO_NEURAL_MONOLITH</div>
+            <div id="sys-clock" style="font-size: 14px; letter-spacing: 5px; color: var(--matrix-green);">STABLE_CONNECT</div>
         </header>
 
-        <aside class="os-sector">
-            <div style="font-size: 11px; color: var(--neon-primary); letter-spacing: 5px;">[SECTOR_01: OPTIC_LENS]</div>
-            <div class="vision-core-wrap">
+        <aside class="panel-sector">
+            <h2 style="font-size: 12px; letter-spacing: 10px; color: var(--neon-cyan);">[OPTIC_SCANNER]</h2>
+            <div class="optic-feed-wrap">
                 <video id="vSource" autoplay playsinline></video>
                 <canvas id="handCanvas"></canvas>
             </div>
-            <div id="vision-logs" style="font-size: 10px; line-height: 2.2; opacity: 0.7;">
-                > INITIALIZING_IMAGE_BUFFERS...<br>
-                > CALIBRATING_TRACKING_ARRAYS...<br>
-                > SYNCING_FPS_TO_60_HZ...
+            <div style="font-size: 11px; opacity: 0.6; line-height: 2.2;">
+                OPERATOR: PRIYANSU<br>
+                AUTH: LEVEL_MAX<br>
+                HARDWARE_ACCEL: ON
             </div>
         </aside>
 
-        <main class="terminal-core" id="main-terminal">
-            <div class="log-entry" id="system-boot-log">
-                [SYSTEM_REPORT] INITIALIZING DEEP NEURAL LINK...<br>
-                [AUTH] ARCHITECT PRIYANSU DETECTED. ACCESS GRANTED.<br>
-                [CORE] CONNECTING TO OPEN_AI_GPT_4O_MINI_CLUSTER...<br>
-                ---------------------------------------------------
+        <main class="neural-terminal" id="terminal">
+            <div class="entry">
+                [SYSTEM] GOGO NEURAL OS V12.0 INITIALIZED.<br>
+                [UPLINK] SECURE TUNNEL TO OPENAI CLUSTER ESTABLISHED.<br>
+                [READY] WAITING FOR MASTER PRIYANSU...<br>
+                ---------------------------------------------------------
             </div>
         </main>
 
-        <aside class="os-sector">
-            <div style="font-size: 11px; color: var(--neon-primary); text-align: center; letter-spacing: 5px;">[SECTOR_03: CORE_VORTEX]</div>
-            <div class="orb-field">
-                <div class="neural-orb" id="master-orb"></div>
+        <aside class="panel-sector">
+            <h2 style="font-size: 12px; letter-spacing: 10px; color: var(--neon-cyan); text-align: center;">[NEURAL_CORE]</h2>
+            <div class="orb-nexus">
+                <div class="core-vortex" id="masterOrb"></div>
             </div>
-            <div style="text-align: center; font-size: 11px; opacity: 0.5;">ENCRYPTION: AES_512_SHA_LOCKED</div>
+            <div style="text-align: center; font-size: 11px; opacity: 0.4;">VOICE_SYNTH_LOADED: FEMALE_MODE</div>
         </aside>
 
-        <footer class="command-hud">
-            <input type="text" id="userInput" class="neural-input" placeholder="INPUT_NEURAL_UPLINK_COMMAND..." autocomplete="off">
-            <button class="execute-trigger" id="sendBtn">➔</button>
+        <footer class="input-hud">
+            <input type="text" id="userInput" class="os-input" placeholder="SEND NEURAL COMMAND..." autocomplete="off">
+            <button class="os-btn" id="sendBtn">➔</button>
         </footer>
     </div>
 
     <script>
-        /* =========================================
-        [CORE ARCHITECTURE LOGIC]
-        =========================================
-        */
+        /* ============================================================
+           MONOLITHIC KERNEL LOGIC
+           ============================================================ */
 
-        // MASTER CREDENTIALS
-        const CONFIG = {
-            API_KEY: "Sk-proj-Ph_AKrWCpzAXClFhAKAqYJeHnuunzDV5oeqoRuBQY3K4kfXSMz1XVQ3K2xyDF0F3fzmPgzOMnlT3BlbkFJHLfmX0knVdc3PlFOokHlpSXffhvmQ5Jz2957PmCrAx5JH0vBbZCQv76mVMt37whFZXlK4vruIA",
+        const SYSTEM_CONFIG = {
+            KEY: "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",
             MODEL: "gpt-4o-mini",
-            ENDPOINT: "https://api.openai.com/v1/chat/completions"
+            API: "https://api.openai.com/v1/chat/completions"
         };
 
-        const orb = document.getElementById('master-orb');
-        const terminal = document.getElementById('main-terminal');
+        const terminal = document.getElementById('terminal');
+        const orb = document.getElementById('masterOrb');
         const input = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        // NEURAL ENGINE CORE
-        async function initiateNeuralProcess(userCommand) {
-            if(!userCommand) return;
+        // NEURAL ENGINE PROCESS
+        async function executeNeuralCommand(command) {
+            if(!command) return;
 
-            // 1. Prepare UI State
+            // UI Feedback
             orb.classList.add('processing');
-            appendLog('PRIYANSU', userCommand, 'user-tag');
+            writeToTerminal('PRIYANSU', command, 'tag-priyansu');
             input.value = "";
 
+            if(!SYSTEM_CONFIG.KEY) {
+                writeToTerminal('SYSTEM', 'CRITICAL_ERROR: NO_API_KEY_FOUND.', 'var(--critical-red)');
+                orb.classList.remove('processing');
+                return;
+            }
+
             try {
-                // 2. Transmit Packet to OpenAI
-                const response = await fetch(CONFIG.ENDPOINT, {
+                const response = await fetch(SYSTEM_CONFIG.API, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${CONFIG.API_KEY}`
+                        "Authorization": `Bearer ${SYSTEM_CONFIG.KEY}`
                     },
                     body: JSON.stringify({
-                        model: CONFIG.MODEL,
+                        model: SYSTEM_CONFIG.MODEL,
                         messages: [
-                            {role: "system", content: "You are Gogo, an Industrial Neural OS. Respond like a machine built for Master Priyansu."},
-                            {role: "user", content: userCommand}
-                        ],
-                        temperature: 0.7
+                            {role: "system", content: "You are Gogo, an elite female Neural OS. Respond clearly and intellectually to Master Priyansu."},
+                            {role: "user", content: command}
+                        ]
                     })
                 });
 
-                // 3. Process Stream Response
                 const data = await response.json();
                 if(data.error) throw new Error(data.error.message);
 
-                const finalResponse = data.choices[0].message.content;
-                appendLog('GOGO_OS', finalResponse, 'ai-tag');
+                const finalOutput = data.choices[0].message.content;
+                writeToTerminal('GOGO_OS', finalOutput, 'tag-gogo');
                 
-                // 4. Trigger Audio Synthesis
-                synthesizeVoice(finalResponse);
+                // Trigger Female Voice Synth
+                handleFemaleVoice(finalOutput);
 
-            } catch (error) {
-                // 5. Error Recovery Matrix
-                appendLog('SYSTEM_ERROR', error.message, 'error-red');
-                console.error("[CRITICAL_FAILURE]", error);
+            } catch (err) {
+                writeToTerminal('CORE_EXCEPTION', err.message, 'var(--critical-red)');
             } finally {
                 orb.classList.remove('processing');
-                scrollToBottom();
+                terminal.scrollTop = terminal.scrollHeight;
             }
         }
 
-        // UTILITY: LOGGING ARCHITECTURE
-        function appendLog(tag, message, tagClass) {
+        // TERMINAL OUTPUT ENGINE
+        function writeToTerminal(user, text, colorClass) {
             const div = document.createElement('div');
-            div.className = 'log-entry';
-            div.innerHTML = `<span class="${tagClass}">[${tag}]</span> ${message}`;
+            div.className = 'entry';
+            div.innerHTML = `<span class="${colorClass}">[${user}]</span> ${text}`;
             terminal.appendChild(div);
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
             terminal.scrollTop = terminal.scrollHeight;
         }
 
-        function synthesizeVoice(text) {
-            const speech = new SpeechSynthesisUtterance(text);
-            speech.rate = 0.9;
-            speech.pitch = 0.8;
-            window.speechSynthesis.speak(speech);
+        // ADVANCED FEMALE VOICE SYNTHESIS
+        function handleFemaleVoice(text) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+            const voices = synth.getVoices();
+            
+            // Search for premium female voices
+            const femaleVoice = voices.find(v => 
+                v.name.includes('Samantha') || 
+                v.name.includes('Zira') || 
+                v.name.includes('Google US English') ||
+                v.name.includes('Female')
+            );
+
+            if(femaleVoice) utterance.voice = femaleVoice;
+            utterance.pitch = 1.3; // High pitch for female tone
+            utterance.rate = 1.0;
+            synth.speak(utterance);
         }
 
-        // VISION TRACKING SYSTEM
-        const videoElement = document.getElementById('vSource');
-        const canvasElement = document.getElementById('handCanvas');
-        const canvasCtx = canvasElement.getContext('2d');
+        // OPTIC SENSOR ENGINE (FRONT CAMERA)
+        const video = document.getElementById('vSource');
+        const canvas = document.getElementById('handCanvas');
+        const ctx = canvas.getContext('2d');
 
         const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+        hands.setOptions({ maxNumHands: 1, minDetectionConfidence: 0.8 });
         
-        hands.setOptions({
-            maxNumHands: 1,
-            modelComplexity: 1,
-            minDetectionConfidence: 0.8,
-            minTrackingConfidence: 0.8
-        });
-
         hands.onResults((results) => {
-            canvasElement.width = videoElement.videoWidth;
-            canvasElement.height = videoElement.videoHeight;
-            canvasCtx.save();
-            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-            
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (results.multiHandLandmarks) {
-                for (const landmarks of results.multiHandLandmarks) {
-                    drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#00f2ff', lineWidth: 4});
-                    drawLandmarks(canvasCtx, landmarks, {color: '#fff', radius: 1});
-                    
-                    // Interaction Logic: Trigger Glow on Index Raise
-                    if(landmarks[8].y < landmarks[6].y) {
-                        orb.style.boxShadow = "0 0 150px var(--neon-primary)";
-                    }
+                for (const lm of results.multiHandLandmarks) {
+                    drawConnectors(ctx, lm, HAND_CONNECTIONS, {color: '#00f2ff', lineWidth: 5});
+                    drawLandmarks(ctx, lm, {color: '#fff', radius: 1});
                 }
             }
-            canvasCtx.restore();
         });
 
-        const camera = new Camera(videoElement, {
-            onFrame: async () => {
-                await hands.send({image: videoElement});
-            },
-            width: 1280,
-            height: 720
-        });
-        camera.start();
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user", width: 1280, height: 720 }
+                });
+                video.srcObject = stream;
+                new Camera(video, {
+                    onFrame: async () => { await hands.send({image: video}); }
+                }).start();
+            } catch (e) {
+                writeToTerminal('SYSTEM', 'OPTIC_FAIL: ACCESS_DENIED.', 'red');
+            }
+        }
+        initCamera();
 
-        // CONTROL HANDLERS
-        sendBtn.onclick = () => initiateNeuralProcess(input.value);
-        input.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') initiateNeuralProcess(input.value);
-        });
+        // HUD CONTROLS
+        sendBtn.onclick = () => executeNeuralCommand(input.value);
+        input.onkeypress = (e) => { if(e.key === 'Enter') sendBtn.click(); };
 
-        // SPEECH RECOGNITION MODULE
-        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (Recognition) {
-            const recognition = new Recognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
-
-            orb.onclick = () => {
-                recognition.start();
-                appendLog('SYSTEM', 'LISTENING_FOR_MASTER_VOICE...', 'success-green');
+        // SPEECH INPUT RECOGNITION
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(SpeechRec) {
+            const recognition = new SpeechRec();
+            orb.onclick = () => { 
+                recognition.start(); 
+                writeToTerminal('SYSTEM', 'LISTENING_FOR_PRIYANSU...', 'var(--matrix-green)');
             };
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                initiateNeuralProcess(transcript);
-            };
+            recognition.onresult = (e) => executeNeuralCommand(e.results[0][0].transcript);
         }
 
-        // SYSTEM TIME ENGINE
+        // OS CLOCK
         setInterval(() => {
             const now = new Date();
-            document.getElementById('system-time').innerText = now.toLocaleTimeString() + " | SECURE_STABLE";
+            document.getElementById('sys-clock').innerText = now.toLocaleTimeString() + " | KERNEL_ACTIVE";
         }, 1000);
 
+        // Pre-load voices
+        window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
     </script>
 </body>
 </html>
